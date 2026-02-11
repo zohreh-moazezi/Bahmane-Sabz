@@ -1,24 +1,17 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
+/**
+ * Root page
+ * This page immediately redirects user to /login
+ * because login is the entry point of the app.
+ */
 export default function Home() {
-  return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black`}
-    >
-      <h1>Home</h1>
-      <Link href="/login">Go to Login</Link>
-      <Link href="/dashboard">Dashboard</Link>
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/login");
+  }, [router]);
+
+  return null;
 }
