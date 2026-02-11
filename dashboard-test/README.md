@@ -9,6 +9,16 @@ The login page is implemented using modern best practices and clean architecture
 - React Query → API communication
 - Chakra UI → UI components
 
+## Architecture Highlights
+
+- Feature-based folder structure
+- SOLID principles
+- Separation of Concerns
+- DRY validation strategy
+- Custom hooks for business logic
+- Centralized API layer
+
+
 ### Architecture Decisions
 - Validation schema is separated for reusability
 - API logic is placed in `services/auth/authService.ts`

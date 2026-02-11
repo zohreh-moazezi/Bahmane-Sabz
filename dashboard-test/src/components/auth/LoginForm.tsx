@@ -1,3 +1,19 @@
+/**
+ * LoginForm Component
+ *
+ * Responsibilities:
+ * - Render login UI
+ * - Handle form state using React Hook Form
+ * - Validate inputs using Zod schema
+ * - Trigger login mutation via useLogin hook
+ *
+ * Architecture decisions:
+ * - UI separated from business logic (SOLID)
+ * - Validation handled externally (DRY)
+ * - API logic abstracted in services layer
+ */
+
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading, Box, Input, Button, VStack, Text } from "@chakra-ui/react";

@@ -1,3 +1,16 @@
+/**
+ * Authentication Service
+ *
+ * Responsibilities:
+ * - Send login request to backend
+ * - Isolate API calls from UI
+ *
+ * Follows:
+ * - Separation of concerns
+ * - Single responsibility principle
+ */
+
+
 import { axiosInstance } from "@/services/api/axiosInstance";
 import { LoginRequest, LoginResponse } from "@/features/auth/auth.type";
 

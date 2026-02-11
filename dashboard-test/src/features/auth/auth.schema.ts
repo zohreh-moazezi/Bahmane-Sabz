@@ -1,3 +1,17 @@
+/**
+ * Zod validation schema for authentication
+ *
+ * Responsibilities:
+ * - Validate login inputs
+ * - Ensure username & password are provided
+ * - Central place for validation logic
+ *
+ * Benefits:
+ * - Reusable
+ * - Type-safe
+ * - Keeps UI clean
+ */
+
 import { z } from "zod";
 
 export const loginSchema = z.object({

@@ -1,3 +1,16 @@
+/**
+ * Custom App Component (Next.js)
+ *
+ * Purpose:
+ * - Global configuration entry point
+ *
+ * Providers:
+ * - ChakraProvider → global UI styling
+ * - QueryClientProvider → React Query global state
+ *
+ * This file wraps ALL pages.
+ */
+
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
