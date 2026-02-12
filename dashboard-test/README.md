@@ -26,11 +26,16 @@ The login page is implemented using modern best practices and clean architecture
 - UI and logic are separated (SOLID principle)
 
 ### Flow
-1. User enters username & password
-2. Zod validates inputs
-3. React Query sends login request
-4. On success:
-   - Token stored
-   - User redirected to dashboard
-5. On error:
-   - Error message shown
+Authentication Flow
+
+User logs in via /login
+
+Access token stored in localStorage
+
+Refresh token stored in localStorage
+
+Axios interceptor attaches access token automatically
+
+Expired tokens are refreshed using refresh token
+
+Protected routes redirect unauthenticated users to login
