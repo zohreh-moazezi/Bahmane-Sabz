@@ -22,8 +22,9 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      tokenStorage.set(data.token);
+      tokenStorage.setToken(data.accessToken);
       router.push("/dashboard");
+      tokenStorage.setRefreshToken(data.refreshToken);
     },
   });
 };

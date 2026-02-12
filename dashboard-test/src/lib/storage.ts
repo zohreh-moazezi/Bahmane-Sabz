@@ -12,13 +12,20 @@
  */
 
 export const tokenStorage = {
-  set(accessToken: string) {
+  setToken(accessToken: string) {
     localStorage.setItem("accessToken", accessToken);
   },
-  get() {
+  getToken() {
     return localStorage.getItem("accessToken");
   },
-  remove() {
+  removeToken() {
     localStorage.removeItem("accessToken");
   },
+  setRefreshToken(refreshToken:string){
+    localStorage.setItem("refreshToken",refreshToken)
+  },
+  getRefreshToken(){
+    return localStorage.getItem("refreshToken")
+  }
+
 };
