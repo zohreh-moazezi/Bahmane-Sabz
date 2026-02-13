@@ -39,3 +39,29 @@ Axios interceptor attaches access token automatically
 Expired tokens are refreshed using refresh token
 
 Protected routes redirect unauthenticated users to login
+
+
+# Dashboard Feature
+
+## Overview
+This feature implements a professional admin dashboard including:
+- Top-level statistics (users, products)
+- Recent Users
+- Recent Products
+- Protected route for authenticated users
+
+
+## Usage
+- `StatCard` → reusable for showing any numeric stats
+- `RecentUsers` → displays recent users with avatar, name, email, gender
+- `RecentProducts` → displays recent products with thumbnail, title, price
+- `useDashboardStates` → fetches users and products data using react-query
+
+## Protected Route
+Dashboard page is wrapped with `withAuth` HOC to prevent unauthenticated access.
+
+## How to Run
+1. `yarn install`
+2. `yarn dev`
+3. Navigate to `/dashboard` after login
+

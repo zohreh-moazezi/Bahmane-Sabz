@@ -13,12 +13,11 @@
  * - API logic abstracted in services layer
  */
 
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading, Box, Input, Button, VStack, Text } from "@chakra-ui/react";
-import { LoginFormValues, loginSchema } from "@/features/auth/auth.schema";
-import { useLogin } from "@/features/auth/useLogin";
+import { LoginFormValues, loginSchema } from "@/features/auth/services/auth.schema";
+import { useLogin } from "@/features/auth/hooks/useLogin";
 
 export default function Loginform() {
   const {

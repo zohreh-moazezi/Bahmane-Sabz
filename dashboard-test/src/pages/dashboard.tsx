@@ -17,18 +17,48 @@
  *   attaches accessToken and handles token refresh).
  *
  * This separation keeps the page clean and focused on UI.
- */
+ 
+* Main admin dashboard page.
+ * Features:
+ *  - Shows top-level stats (users, products)
+ *  - Displays recent users and products
+ *  - Uses DashboardLayout for sidebar/header
+ *  - Protected route using withAuth HOC
+ 
+*/
 
-import { withAuth } from "@/features/auth/hoc/withAuth";
+import { withAuth } from "@/features/auth/component/hoc/withAuth";
+import { useAuthUser } from "@/features/auth/hooks/useAuthUser";
+import { useDashboardStates } from "@/features/dashboard/hooks/useDashboardStates";
+import RecentProducts from "@/features/dashboard/components/RecentProducts";
+import RecantUsers from "@/features/dashboard/components/RecentUsers";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Heading } from "@chakra-ui/react";
+import StatCard from "@/features/dashboard/components/StatCard";
+import { Heading, Text, SimpleGrid } from "@chakra-ui/react";
 
 function Dashboard() {
+  const { usersQuery, productsQuery } = useDashboardStates();
+  const { data: user, isLoading, error } = useAuthUser();
+  const stats = [
+    { title: "Users", value: usersQuery.data?.total },
+    { title: "Products", value: productsQuery.data?.total },
+  ];
+
+  if (isLoading) return <Heading>Loading...</Heading>;
+  if (error) return <Text color="red.500">Error Loading User</Text>;
+
   return (
-    <DashboardLayout>
+    <DashboardLayout user={user}>
       <Heading size="lg" mb={4}>
-        Dashboard
+        Welcome to your Dashboard
       </Heading>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} mb={8}>
+        {stats.map((stat) => (
+          <StatCard key={stat.title} {...stat} />
+        ))}
+      </SimpleGrid>
+      <RecantUsers users={usersQuery.data?.users || []} />
+      <RecentProducts products={productsQuery.data?.products || []} />
     </DashboardLayout>
   );
 }
