@@ -143,3 +143,154 @@ Since the backend API simulates changes (no persistence), all CRUD operations ar
 - Add **filters** by role, gender, or status.
 - Add **toast notifications** for add/update/delete operations.
 
+
+
+Refactor Notes – Migration from users feature → generic entities feature
+Why we refactored
+
+Originally, the project had a dedicated users feature folder with its own:
+
+components
+
+hooks
+
+services
+
+types
+
+When implementing the Products section, we noticed that:
+
+Table UI was identical
+
+Modal form behavior was identical
+
+CRUD logic was identical
+
+Pagination logic was identical
+
+API structure was identical
+
+This created duplication risk and violated:
+
+DRY principle
+
+SOLID (especially Open/Closed)
+
+Separation of Concerns
+
+So we redesigned the architecture to support multiple entities using one generic system.
+
+🏗️ New Architecture (Scalable & Maintainable)
+
+We replaced:
+
+features/
+  users/
+
+With:
+
+features/
+  entities/
+    components/
+    hooks/
+    services/
+    types/
+
+Now Users and Products are just configurations of the same engine.
+
+This makes the system:
+
+Easily scalable
+
+Clean
+
+Maintainable
+
+Extendable for future entities (Orders, Categories, etc.)
+
+🧠 Architectural Benefits
+DRY
+
+All shared CRUD logic exists in one place:
+
+One table component
+
+One modal form
+
+One API layer
+
+One mutation hook
+
+No duplicated logic between users/products.
+
+SOLID Principles
+
+Single Responsibility
+
+EntityTable → handles list display + actions
+
+EntityFormModal → handles form UI
+
+useEntities → handles fetching
+
+useEntityMutations → handles mutations
+
+entityApi → handles HTTP requests
+
+Each file has one clear job.
+
+Open/Closed
+
+To support a new entity, we only:
+
+Pass a different entityName
+
+Pass different columns
+
+No internal logic changes needed.
+
+Liskov Substitution
+
+User and Product both extend BaseEntity
+
+Both can be used in the same components safely.
+
+Interface Segregation
+
+Components only receive what they need:
+
+table → columns + items
+
+modal → fields
+
+Dependency Inversion
+
+UI depends on hooks
+
+Hooks depend on services
+
+Services depend on axios
+
+Clean layered structure.
+
+Separation of Concerns
+Layer	Responsibility
+Pages	Entity configuration
+Components	UI rendering
+Hooks	State + logic
+Services	API communication
+Types	Contracts
+🚀 Scalability
+
+To add a new entity (example: Orders):
+
+Only create:
+
+pages/orders.tsx
+
+And pass:
+
+useEntities<Order>("orders")
+<EntityTable columns=[...] />
+
+No new components needed.

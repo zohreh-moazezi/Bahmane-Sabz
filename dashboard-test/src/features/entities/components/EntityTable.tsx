@@ -1,25 +1,34 @@
-/**
- * UserTable
- * ----------
- * Displays a table of users with pagination.
- * Supports Add, Edit, Delete operations via UserFormModal and useUserMutations.
- *
- * Props:
- * - users: User[] – array of users to display
- * - total: number – total number of users
- * - page: number – current page number
- * - setPage: function – changes page
- * - limit: number – number of users per page
- */
+// Purpose
+// Reusable table to display and manage any entity list.
 
-import { useRef } from "react";
+// Responsibilities
+
+// Render dynamic columns
+
+// Handle edit/delete actions
+
+// Open modal for add/edit
+
+// Pagination controls
+
+// Delete confirmation dialog
+
+// Why it's powerful
+
+// Table structure is defined by columns
+
+// Works for Users, Products, or any future entity
+
+// Architecture Note
+// Page controls WHAT fields to show.
+// Table controls HOW to display them.
 import {
   Table,
   Thead,
-  Tbody,
-  Tr,
   Th,
+  Tr,
   Td,
+  Tbody,
   Avatar,
   Button,
   Flex,
@@ -31,107 +40,107 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
+import { useState, useRef } from "react";
+import { useEntityMutations } from "../hooks/useEntityMutations";
+import { BaseEntity } from "../types";
+import EntityFormModal from "./EntityFormModal";
 import type { FocusableElement } from "@chakra-ui/utils";
-import { useState } from "react";
-import UserFormModal from "@/features/users/component/UserFormModal";
-import { useUserMutations } from "@/features/users/hooks/useUserMutations";
-import { User } from "../types/user.type";
 
-interface Props {
-  users: User[];
+interface Props<T extends BaseEntity> {
+  entityName: string;
+  items: T[];
   total: number;
   page: number;
   setPage: (page: number) => void;
   limit: number;
+  columns: { key: keyof T; label: string }[];
 }
 
-export default function UserTable({
-  users,
+export default function EntityTable<T extends BaseEntity>({
+  entityName,
+  items,
   total,
   page,
   setPage,
   limit,
-}: Props) {
-  const [userToDelete, setUserToDelete] = useState<User | null>(null);
-  const cancelRef = useRef<HTMLButtonElement>(null);
-
+  columns,
+}: Props<T>) {
   const totalPage = Math.ceil(total / limit);
+  const [itemToDelete, setItemToDelete] = useState<BaseEntity | null>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [selectedItem, setSelectedItem] = useState<T | null>(null);
+  const { addMuation, updateMuation, deleteMutation } =
+    useEntityMutations(entityName);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
-  const { addMutation, updateMutation, deleteMutation } = useUserMutations();
-
-  const handleSubmit = async (data: Partial<User>) => {
+  const handleSubmit = async (data: Partial<T>) => {
     console.log("Submitting:", data);
-    if (selectedUser) {
-      console.log("Updating:", selectedUser.id);
-      await updateMutation.mutateAsync({ id: selectedUser.id, data });
+    if (selectedItem) {
+      console.log("Updating:", selectedItem.id);
+      await updateMuation.mutateAsync({ id: selectedItem.id, data });
     } else {
       console.log("Adding user");
-      await addMutation.mutateAsync(data);
+      await addMuation.mutateAsync(data);
     }
     onClose();
   };
+
   return (
     <>
       <Button
         mb={4}
         onClick={() => {
-          setSelectedUser(null);
+          setSelectedItem(null);
           onOpen();
         }}
       >
-        Add User
+        ADD {entityName.slice(0, -1)}
       </Button>
-
       <Table variant="simple" bg="white" shadow="md" rounded="lg">
         <Thead>
           <Tr>
-            <Th>Avatar</Th>
-            <Th>Name</Th>
-            <Th>Email</Th>
-            <Th>Gender</Th>
+            {columns.map((col) => (
+              <Th key={String(col.key)}>{col.label}</Th>
+            ))}
             <Th>Action</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {users.map((user) => (
-            <Tr key={user.id}>
-              <Td>
-                <Avatar size="sm" src={user.image} />
-              </Td>
-              <Td>
-                {user.firstName} {user.lastName}
-              </Td>
-              <Td>{user.email}</Td>
-              <Td>{user.gender}</Td>
+          {items.map((item) => (
+            <Tr key={item.id}>
+              {columns.map((col) => (
+                <Td key={String(col.key)}>
+                  {col.key === "image" ? (
+                    <Avatar size="sm" src={item[col.key] as string} />
+                  ) : (
+                    String(item[col.key] ?? "")
+                  )}
+                </Td>
+              ))}
               <Td>
                 <Button
                   size="sm"
                   colorScheme="red"
-                  onClick={() => setUserToDelete(user)}
+                  onClick={() => setItemToDelete(item)}
                   isLoading={deleteMutation.isPending}
                 >
                   Delete
                 </Button>
                 <AlertDialog
-                  isOpen={!!userToDelete}
+                  isOpen={!!itemToDelete}
                   leastDestructiveRef={
                     cancelRef as React.RefObject<FocusableElement>
                   }
-                  onClose={() => setUserToDelete(null)}
+                  onClose={() => setItemToDelete(null)}
                 >
                   <AlertDialogOverlay>
                     <AlertDialogContent>
-                      <AlertDialogHeader>Delete User</AlertDialogHeader>
-
+                      <AlertDialogHeader>Delete Item</AlertDialogHeader>
                       <AlertDialogBody>Are you sure?</AlertDialogBody>
-
                       <AlertDialogFooter>
                         <Button
                           ref={cancelRef}
-                          onClick={() => setUserToDelete(null)}
+                          onClick={() => setItemToDelete(null)}
                         >
                           Cancel
                         </Button>
@@ -139,9 +148,9 @@ export default function UserTable({
                           colorScheme="red"
                           ml={3}
                           onClick={() => {
-                            if (userToDelete) {
-                              deleteMutation.mutate(userToDelete.id);
-                              setUserToDelete(null);
+                            if (itemToDelete) {
+                              deleteMutation.mutate(itemToDelete.id);
+                              setItemToDelete(null);
                             }
                           }}
                         >
@@ -151,14 +160,13 @@ export default function UserTable({
                     </AlertDialogContent>
                   </AlertDialogOverlay>
                 </AlertDialog>
-
                 <Button
                   size="sm"
+                  ml={2}
                   onClick={() => {
-                    setSelectedUser(user);
+                    setSelectedItem(item);
                     onOpen();
                   }}
-                  isLoading={updateMutation.isPending}
                 >
                   Edit
                 </Button>
@@ -167,11 +175,15 @@ export default function UserTable({
           ))}
         </Tbody>
       </Table>
-      <UserFormModal
+      <EntityFormModal
         isOpen={isOpen}
         onClose={onClose}
+        initialData={selectedItem}
         onSubmit={handleSubmit}
-        initialData={selectedUser}
+        fields={columns.map((c) => ({
+          name: c.key,
+          label: c.label,
+        }))}
       />
 
       <Flex justify="flex-end" mt={4} gap={2}>

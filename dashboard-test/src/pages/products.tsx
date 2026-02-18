@@ -1,17 +1,11 @@
-/**
- * UsersPage
- * ----------
- * Main page for managing users.
- * Uses DashboardLayout for consistent layout.
- * Fetches users via useUsers hook and displays UserTable.
- * Wrapped in withAuth HOC to protect the page.
- */
+// Configures the same system for "products":
 
-// Configures the generic system for "users":
+// entityName = "products"
 
-// entityName = "users"
+// columns = product fields
 
-// columns = user fields
+// Pages act as:
+// Configuration layer, not logic layer
 
 import { useState } from "react";
 import { Box, Heading, Spinner, Center } from "@chakra-ui/react";
@@ -20,14 +14,14 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { withAuth } from "@/features/auth/component/hoc/withAuth";
 import { useEntities } from "@/features/entities/hooks/useEntities";
 import EntityTable from "@/features/entities/components/EntityTable";
-import { User } from "@/features/entities/types";
+import { Product } from "@/features/entities/types";
 
 function UsersPage() {
   const [page, setPage] = useState(1);
   const limit = 10;
   const skip = (page - 1) * limit;
 
-  const { data, isLoading } = useEntities<User>("users", limit, skip);
+  const { data, isLoading } = useEntities<Product>("products", limit, skip);
 
   if (isLoading) {
     return (
@@ -40,20 +34,21 @@ function UsersPage() {
   return (
     <DashboardLayout>
       <Box>
-        <Heading mb={6}>Users</Heading>
+        <Heading mb={6}>Products</Heading>
 
         <EntityTable
-          entityName="users"
+          entityName="products"
           items={data?.items || []}
           total={data?.total || 0}
           page={page}
           setPage={setPage}
           limit={limit}
           columns={[
-            { key: "firstName", label: "First Name" },
-            { key: "lastName", label: "Last Name" },
-            { key: "email", label: "Email" },
-            { key: "image", label: "Avatar" },
+            { key: "image", label: "Image" },
+            { key: "title", label: "Title" },
+            { key: "category", label: "Category" },
+            { key: "brand", label: "Brand" },
+            { key: "price", label: "Price" },
           ]}
         />
       </Box>
