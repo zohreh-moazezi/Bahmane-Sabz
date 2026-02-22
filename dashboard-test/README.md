@@ -1,3 +1,9 @@
+## 🌍 Live Deployment
+
+You can access the deployed project here:
+
+🔗 https://bahman-e-sabz.netlify.app/login
+
 ## Login Feature
 
 ### Overview
@@ -21,7 +27,7 @@ The login page is implemented using modern best practices and clean architecture
 
 ### Architecture Decisions
 - Validation schema is separated for reusability
-- API logic is placed in `services/auth/authService.ts`
+- API logic is placed in services folder
 - Custom hook `useLogin.ts` handles authentication logic
 - UI and logic are separated (SOLID principle)
 
@@ -75,39 +81,7 @@ Since the backend API simulates changes (no persistence), all CRUD operations ar
 
 ---
 
-## Components
 
-### 1. DashboardLayout
-- Provides consistent dashboard layout (Sidebar + Header + Main content).
-- Sidebar includes links to Dashboard, Users, Products.
-- Header shows logged-in user avatar and greeting.
-
-### 2. UsersPage (`pages/users.tsx`)
-- Fetches paginated users using `useUsers` hook.
-- Displays `UserTable` with list of users.
-- Handles opening `UserFormModal` for add/edit operations.
-
-### 3. UserTable
-- Displays users in a table format with avatar, name, email, and gender.
-- Includes **Add**, **Edit**, **Delete** buttons.
-- Shows **pagination** controls.
-- Handles opening `UserFormModal` and delete confirmation dialog.
-
-### 4. UserFormModal
-- Modal for adding/editing a user.
-- Uses **React Hook Form** for validation and form management.
-- Fields: `firstName`, `lastName`, `email`.
-
-### 5. Hooks
-#### `useUsers`
-- Fetch paginated users via API.
-- Returns `users`, `total`, `isLoading`.
-
-#### `useUserMutations`
-- Handles `addUser`, `updateUser`, `deleteUser`.
-- Uses React Query mutations with **cache updates** instead of refetching.
-
----
 
 ## User Flow
 
@@ -137,11 +111,6 @@ Since the backend API simulates changes (no persistence), all CRUD operations ar
 
 ---
 
-## Future Improvements
-- Implement real backend persistence.
-- Add **search users** functionality.
-- Add **filters** by role, gender, or status.
-- Add **toast notifications** for add/update/delete operations.
 
 
 
